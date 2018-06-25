@@ -32,4 +32,4 @@
             {!! Form::close() !!}
         </div>
     </div>
-@endsections
+@endsection
