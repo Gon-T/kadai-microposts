@@ -90,6 +90,37 @@ class User extends Authenticatable
     
     public function favoritings()
     {
-        return $this->belongsToMany(User::class, 'favorites', 'user_id', 'fav_id')->withTimestamps();
+        return $this->belongsToMany(Micropost::class, 'favorites', 'user_id', 'fav_id')->withTimestamps();
+    }
+    
+    public function favorite($postId)
+    {
+        $exist = $this->is_favoriting($postId);
+        
+        if ($exist) {
+            return false;
+        }
+        else{
+            $this->favoritings()->attach($postId);
+            return true;
+        }
+    }
+    
+    public function unfavorite($postId)
+    {
+        $exist = $this->is_favoriting($postId);
+        
+        if($exist) {
+            $this->favoritings()->detach($postId);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    public function is_favoriting($postId)
+    {
+        return $this->favoritings()->where('fav_id', $postId)->exists();
     }
 }
